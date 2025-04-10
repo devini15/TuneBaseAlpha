@@ -33,3 +33,24 @@ User Guide
 	- Finish: Allows you to generate the output as a string that can be copy/pasted into DECtalk.
 		- Selecting "Yes" when asked to make a file will either create or overwrite the contents of output.txt in the folder you run the jar from.
 7. Paste the output into DECtalk, you are done!
+
+Known Phonemes
+==============
+- aa = box
+- ah = bald
+- ae = tap
+- ay = tie
+- ao = owe uhh
+- aw = loud (may change depending on whatever follows)
+- ar = tar
+- ey = way
+- eh = wet
+- iy = bean
+- ih = tip
+- ix = tip
+- ir = ear
+- ow = boat
+- uh = punt
+- uw = tool
+- jh = [sound of television static]
+- hx = I honestly don't know but it's weird
