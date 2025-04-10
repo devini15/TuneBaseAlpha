@@ -1,10 +1,9 @@
 /*
-TuneBaseAlpha v1.0
+TuneBaseAlpha v1.1
 DECTalk music generator by Devini15
 
 New this version:
-    - Added Undo Button
-    - Added Console Colors
+    - Added Output so Far
 
 Developer contact:
     - Discord: devini15
@@ -49,6 +48,7 @@ public class MakeSongs {
         JButton addButton = new JButton(onAdd()),
                 clearButton = new JButton(onClear()),
                 undoButton = new JButton(onUndo()),
+                outButton = new JButton(onOut()),
                 doneButton = new JButton(onDone());
         JLabel pitchLabel = new JLabel("Select Pitch    "),//Some extra spaces because aligning text in swing is a nightmare
                 timeLabel = new JLabel("Enter Duration (ms)"),
@@ -71,6 +71,7 @@ public class MakeSongs {
         actionHBox.add(addButton);
         actionHBox.add(clearButton);
         actionHBox.add(undoButton);
+        actionHBox.add(outButton);
         actionHBox.add(doneButton);
         //Place the label/input field stacks next to each other
         inputHBox.add(pitchVBox);
@@ -83,10 +84,12 @@ public class MakeSongs {
         addButton.setText("Add");
         clearButton.setText("Add & Clear Fields");
         undoButton.setText("Undo");
+        outButton.setText("Output so Far");
         doneButton.setText("Finish");
         addButton.setEnabled(true);
         clearButton.setEnabled(true);
         undoButton.setEnabled(true);
+        outButton.setEnabled(true);
         doneButton.setEnabled(true);
         //Add everything to the frame
         configurationFrame.add(bigOlVBox);
@@ -105,7 +108,7 @@ public class MakeSongs {
         String[] welcomeOptions = {"Start", "Help"};
         //Open README.txt if the user selects "Help"
         int welcomeChoice = JOptionPane.showOptionDialog(null,
-                "Welcome to TuneBaseAlpha " + VERSION,
+                "Welcome to TuneBaseAlpha " + VERSION + "\n by Devini15",
                 "Welcome!",
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.INFORMATION_MESSAGE,
@@ -209,14 +212,24 @@ public class MakeSongs {
     }
 
     /**
+     * Generates output string
+     * @return DECTALK formatted string with all notes input so far.
+     */
+    private static String generateOutput(){
+        StringBuilder outString = new StringBuilder("[:phone on]["); //[:phone on] tells DECTalk to enable tones
+        for (String s : notes) outString.append(s); //adds all notes generated to a string.
+        outString.append("]");//the entire message must be in brackets to be sung.
+        return outString.toString();
+    }
+
+    /**
      * Outputs the results to console, will also create a file if user specifies.
      */
     private static void outputResults() {
         System.out.println("\u001b[33mCompiling output string...\u001b[0m");
-        StringBuilder finalOutput = new StringBuilder("[:phone on]["); //[:phone on] tells DECTalk to enable tones
-        for (String s : notes) finalOutput.append(s); //adds all notes generated to a string.
-        finalOutput.append("]");//the entire message must be in brackets to be sung.
+        String finalOutput = generateOutput();
         //ask the user if they would like to output a file in addition to console output
+        System.out.println("\u001b[33mAwaitng user input...\u001b[0m");
         int selection = JOptionPane.showConfirmDialog(null,
                 "Copy output to file?\nYes: Make File\nNo: Console Output Only",
                 "Make a File?",
@@ -372,6 +385,45 @@ public class MakeSongs {
             @Override
             public void actionPerformed(ActionEvent e) {
                 removeEntry();
+            }
+        };
+    }
+
+    private static Action onOut(){ //outputs result of generateOutput
+        return new Action() {
+            @Override
+            public Object getValue(String key) {
+                return null;
+            }
+
+            @Override
+            public void putValue(String key, Object value) {
+
+            }
+
+            @Override
+            public void setEnabled(boolean b) {
+
+            }
+
+            @Override
+            public boolean isEnabled() {
+                return false;
+            }
+
+            @Override
+            public void addPropertyChangeListener(PropertyChangeListener listener) {
+
+            }
+
+            @Override
+            public void removePropertyChangeListener(PropertyChangeListener listener) {
+
+            }
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(generateOutput());
             }
         };
     }
