@@ -4,6 +4,9 @@ DECTalk music generator by Devini15
 
 New this version:
     - Added Output so Far
+    - Shifted octaves to be accurate
+    - Added ending consonants field
+    - Added no color mode if any argument is used when launching
 
 Developer contact:
     - Discord: devini15
@@ -23,24 +26,27 @@ import javax.swing.*;
 public class MakeSongs {
     private static final int DEFAULT_WIDTH = 700; //Window width
     private static final int DEFAULT_HEIGHT = 110; //Window height
-    private static final String VERSION = "v1.0"; //Current Version
+    private static final String VERSION = "v1.1"; //Current Version
+    private static boolean noColor;
 
     //these objects are declared globally because if I tried passing them back and forth, my brain would explode
     private static final JTextField timeField = new JTextField(),
-            phoneField = new JTextField();
+            phoneField = new JTextField(),
+            consField = new JTextField();
     private static final JComboBox<String> pitchSelector = new JComboBox<>();
 
     private static final LinkedList<String> notes = new LinkedList<>(); //This will hold all strings generated
 
     //Way more code than should reasonably be in a main method
     public static void main(String[] args) {
+        noColor = args.length != 0;
         welcomeMessage();
         JFrame configurationFrame; //The frame where the magic happens
         configurationFrame = setUpFrame();
         String[] pitches = { //compatible pitches
+                "C2", "C#2", "D2", "D#2", "E2", "F2", "F#2", "G2", "G#2", "A2", "A#2", "B2",
                 "C3", "C#3", "D3", "D#3", "E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3",
-                "C4", "C#4", "D4", "D#4", "E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4",
-                "C5", "C#5", "D5", "D#5", "E5", "F5", "F#5", "G5", "G#5", "A5", "A#5", "B5", "C6"
+                "C4", "C#4", "D4", "D#4", "E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4", "C5"
         };
         //Populate the dropdown menu to select pitches
         for (String s : pitches) pitchSelector.addItem(s);
@@ -52,12 +58,14 @@ public class MakeSongs {
                 doneButton = new JButton(onDone());
         JLabel pitchLabel = new JLabel("Select Pitch    "),//Some extra spaces because aligning text in swing is a nightmare
                 timeLabel = new JLabel("Enter Duration (ms)"),
-                phoneLabel = new JLabel("Enter Phoneme");
+                phoneLabel = new JLabel("Enter Phoneme"),
+                consLabel = new JLabel("Enter ending consonant(s)");
         Box inputHBox = Box.createHorizontalBox(),//holds the vertical boxes containing the text fields, labels, and drop down menu as defined below
                 actionHBox = Box.createHorizontalBox(),//holds the buttons
                 pitchVBox = Box.createVerticalBox(),//holds the label and dropdown for pitch selection
                 timeVBox = Box.createVerticalBox(),//holds the label and field for duration input
                 phoneVBox = Box.createVerticalBox(),//holds the label and field for phoneme input
+                consVBox = Box.createVerticalBox(), //holds the label and field for consonants at the end of the phoneme
                 bigOlVBox = Box.createVerticalBox();//holds all UI elements in a cute little package
         //Build Layout
         //Stack labels on top of input fields
@@ -67,6 +75,8 @@ public class MakeSongs {
         timeVBox.add(timeField);
         phoneVBox.add(phoneLabel);
         phoneVBox.add(phoneField);
+        consVBox.add(consLabel);
+        consVBox.add(consField);
         //Place buttons next to each other
         actionHBox.add(addButton);
         actionHBox.add(clearButton);
@@ -77,6 +87,7 @@ public class MakeSongs {
         inputHBox.add(pitchVBox);
         inputHBox.add(timeVBox);
         inputHBox.add(phoneVBox);
+        inputHBox.add(consVBox);
         //stack the label/input field stacks on top of the buttons
         bigOlVBox.add(inputHBox);
         bigOlVBox.add(actionHBox);
@@ -102,8 +113,8 @@ public class MakeSongs {
      * There will be no help button once this window is dismissed, they will either take the help now, or must rely on their wits and intuition.
      */
     private static void welcomeMessage() {
-        System.out.println("\u001b[40;30m YOU SHOULD NOT BE ABLE TO READ THIS!\n" +
-                "If you can, please refer to the readme to fix your console colors or switch to the no-color version.\u001b[0;0m");
+        if(noColor) System.out.println("Running in No Color mode. For text coloring, see readme.txt");
+        else System.out.println("\u001b[40;30m YOU SHOULD NOT BE ABLE TO READ THIS!\nIf you can, please refer to the readme to fix your console colors or switch to the no-color version.\u001b[0;0m");
         File readMe = new File("README.txt");
         String[] welcomeOptions = {"Start", "Help"};
         //Open README.txt if the user selects "Help"
@@ -145,9 +156,9 @@ public class MakeSongs {
      * @param phoneme  phoneme from text field
      * @return Formatted text that can be pasted into DecTalk
      */
-    private static String tone(int pitch, int duration, String phoneme) {
+    private static String tone(int pitch, int duration, String phoneme, String consonants) {
         pitch++; //Dropdown is 0 indexed but DecTalk pitches start at 1
-        String tone = phoneme + "<" + duration + "," + pitch + ">";
+        String tone = phoneme + "<" + duration + "," + pitch + ">" + consonants + " ";
         System.out.println(pitchSelector.getSelectedItem().toString() + ": " + tone);
         return (tone);
     }
@@ -177,15 +188,16 @@ public class MakeSongs {
             int pitch = pitchSelector.getSelectedIndex();
             int duration = Integer.parseInt(timeField.getText());
             String phoneme = phoneField.getText();
+            String consonants = consField.getText();
             //Make DECTalk compatible string and add to notes
-            notes.add(tone(pitch, duration, phoneme));
+            notes.add(tone(pitch, duration, phoneme, consonants));
             //I was going to put something to check if the phoneme was valid, but I think I'll leave that as an exercise for the user for the time being.
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null,
                     "Duration must be an integer.",
                     "Number Format Error",
                     JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -207,7 +219,9 @@ public class MakeSongs {
                     "Premature Revertion",
                     JOptionPane.ERROR_MESSAGE);
         }else {
-            System.out.println("\u001b[0;31mXX: " + notes.removeLast() + " REMOVED\u001b[0m");
+            if(!noColor) System.out.print("\u001b[0;31m");
+            System.out.println("XX: " + notes.removeLast() + " REMOVED");
+            if(!noColor) System.out.print("\u001b[0m");
         }
     }
 
@@ -226,10 +240,13 @@ public class MakeSongs {
      * Outputs the results to console, will also create a file if user specifies.
      */
     private static void outputResults() {
-        System.out.println("\u001b[33mCompiling output string...\u001b[0m");
+        if(!noColor) System.out.print("\u001b[33m");
+        System.out.println("Compiling output string...");
         String finalOutput = generateOutput();
+        System.out.println("Output string compiled.");
         //ask the user if they would like to output a file in addition to console output
-        System.out.println("\u001b[33mAwaitng user input...\u001b[0m");
+        System.out.println("Awaiting user input...");
+        if(!noColor) System.out.print("\u001B[0m");
         int selection = JOptionPane.showConfirmDialog(null,
                 "Copy output to file?\nYes: Make File\nNo: Console Output Only",
                 "Make a File?",
@@ -266,7 +283,9 @@ public class MakeSongs {
             }
         }
         //This code will only run if the user clicked on "Yes" or "No".
-        System.out.println("\u001b[0;32m" + finalOutput + "\u001b[0m");
+        if(!noColor) System.out.print("\u001b[0;32m");
+        System.out.println(finalOutput);
+        if(!noColor) System.out.print("\u001b[0m");
         System.exit(0);
     }
 
