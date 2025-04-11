@@ -2,14 +2,17 @@
  /_  __/_  ______  ___  / __ )____ _________  /   |  / /___  / /_  ____ _
   / / / / / / __ \/ _ \/ __  / __ `/ ___/ _ \/ /| | / / __ \/ __ \/ __ `/
  / / / /_/ / / / /  __/ /_/ / /_/ (__  )  __/ ___ |/ / /_/ / / / / /_/ /
-/_/  \__,_/_/ /_/\___/_____/\__,_/____/\___/_/  |_/_/ .___/_/ /_/\__,_/  v1.0
+/_/  \__,_/_/ /_/\___/_____/\__,_/____/\___/_/  |_/_/ .___/_/ /_/\__,_/  v1.1
 By: Devini15                                       /_/
 
 Developer Contact: https://devini15.live/
 
 New This Version:
-    - Undo Button
-    - Console Colors
+    - Phoneme list in readme
+    - Added "Output so Far" button
+    - Shifted octave labels to be accurate
+    - Added "Ending Consonants" field
+    - Added No Color mode if any argument is used when launching
 
 Console Colors
 ==============
