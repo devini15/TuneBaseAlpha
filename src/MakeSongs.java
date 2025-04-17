@@ -109,6 +109,9 @@ public class MakeSongs {
         timeField.setAction(onAdd());
         phoneField.setAction(onAdd());
         consField.setAction(onAdd());
+        timeField.setEnabled(true);
+        phoneField.setEnabled(true);
+        consField.setEnabled(true);
         //Add everything to the frame
         configurationFrame.add(bigOlVBox);
         //actually show the user something
