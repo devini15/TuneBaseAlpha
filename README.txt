@@ -2,17 +2,16 @@
  /_  __/_  ______  ___  / __ )____ _________  /   |  / /___  / /_  ____ _
   / / / / / / __ \/ _ \/ __  / __ `/ ___/ _ \/ /| | / / __ \/ __ \/ __ `/
  / / / /_/ / / / /  __/ /_/ / /_/ (__  )  __/ ___ |/ / /_/ / / / / /_/ /
-/_/  \__,_/_/ /_/\___/_____/\__,_/____/\___/_/  |_/_/ .___/_/ /_/\__,_/  v1.1
+/_/  \__,_/_/ /_/\___/_____/\__,_/____/\___/_/  |_/_/ .___/_/ /_/\__,_/  v1.2
 By: Devini15                                       /_/
 
 Developer Contact: https://devini15.live/
 
 New This Version:
-    - Phoneme list in readme
-    - Added "Output so Far" button
-    - Shifted octave labels to be accurate
-    - Added "Ending Consonants" field
-    - Added No Color mode if any argument is used when launching
+    - "Add & Clear" button now just "Clear"
+    - Pressing "enter" in any field now adds the next note without needing to click "Add"
+    - More phonemes added to readme
+    - Made it so the clear button actually clears all 3 fields instead of just the 1st 2
 
 Console Colors
 ==============
@@ -39,21 +38,27 @@ User Guide
 
 Known Phonemes
 ==============
-- aa = box
-- ah = bald
-- ae = tap
-- ay = tie
-- ao = owe uhh
-- aw = loud (may change depending on whatever follows)
-- ar = tar
-- ey = way
-- eh = wet
-- iy = bean
-- ih = tip
-- ix = tip
-- ir = ear
-- ow = boat
-- uh = punt
-- uw = tool
-- jh = [sound of television static]
-- hx = I honestly don't know but it's weird
+aa (box, hot)
+ah (bald, war)
+ax (about, tuba)
+ae (tad, apple)
+ay (tie, rye)
+ao ("owe uhh")
+aw (loud, down)
+ar (tar, bark)
+ey (day, drain)
+eh (wet, bent)
+iy (bee, bean)
+ih (tip, flint)
+ix (tip, flint)
+ir (ear, steer)
+ow (boat, soul)
+or (corn, fort)
+uh (punt, run)
+uw (root, rule)
+yu (you, cute)
+
+nx (bang, gong)
+jh (*sound of television static*)
+hx (*I don't know how to describe this but it's weird*)
+zh (measure)

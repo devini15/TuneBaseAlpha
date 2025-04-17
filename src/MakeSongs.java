@@ -1,16 +1,17 @@
 /*
-TuneBaseAlpha v1.1
+TuneBaseAlpha v1.2
 DECTalk music generator by Devini15
 
 New this version:
-    - Added Output so Far
-    - Shifted octaves to be accurate
-    - Added ending consonants field
-    - Added no color mode if any argument is used when launching
+    - "Add & Clear" button now just "Clear"
+    - Pressing "enter" in any field now adds the next note without needing to click "Add"
+    - More phonemes added to readme
+    - Made it so the clear button actually clears all 3 fields instead of just the 1st 2
 
 Developer contact:
     - Discord: devini15
     - Twitter: @DevinLive15
+    - Bluesky: devini15.live
     - Other: https://devini15.live
  */
 
@@ -22,11 +23,12 @@ import java.util.LinkedList;
 import javax.swing.*;
 
 @SuppressWarnings("CallToPrintStackTrace")
-//My IDE says that printStackTrace should "probably be replaced with more robust logging", I say my IDE should put a robust log up it's c***.
+//My IDE says that printStackTrace should "probably be replaced with more robust logging",
+// I say my IDE should put a robust log up it's c***.
 public class MakeSongs {
     private static final int DEFAULT_WIDTH = 700; //Window width
     private static final int DEFAULT_HEIGHT = 110; //Window height
-    private static final String VERSION = "v1.1"; //Current Version
+    private static final String VERSION = "v1.2"; //Current Version
     private static boolean noColor;
 
     //these objects are declared globally because if I tried passing them back and forth, my brain would explode
@@ -38,6 +40,7 @@ public class MakeSongs {
     private static final LinkedList<String> notes = new LinkedList<>(); //This will hold all strings generated
 
     //Way more code than should reasonably be in a main method
+    //Basically just assembles and then displays the UI, all the logic lives elsewhere.
     public static void main(String[] args) {
         noColor = args.length != 0;
         welcomeMessage();
@@ -93,7 +96,7 @@ public class MakeSongs {
         bigOlVBox.add(actionHBox);
         //Format buttons
         addButton.setText("Add");
-        clearButton.setText("Add & Clear Fields");
+        clearButton.setText("Clear Fields");
         undoButton.setText("Undo");
         outButton.setText("Output so Far");
         doneButton.setText("Finish");
@@ -102,6 +105,10 @@ public class MakeSongs {
         undoButton.setEnabled(true);
         outButton.setEnabled(true);
         doneButton.setEnabled(true);
+        //Make fields do things
+        timeField.setAction(onAdd());
+        phoneField.setAction(onAdd());
+        consField.setAction(onAdd());
         //Add everything to the frame
         configurationFrame.add(bigOlVBox);
         //actually show the user something
@@ -154,11 +161,12 @@ public class MakeSongs {
      * @param pitch    pitch selected from dropdown
      * @param duration pitch duration from text field
      * @param phoneme  phoneme from text field
+     * @param consonants consonant(s) from text field
      * @return Formatted text that can be pasted into DecTalk
      */
     private static String tone(int pitch, int duration, String phoneme, String consonants) {
         pitch++; //Dropdown is 0 indexed but DecTalk pitches start at 1
-        String tone = phoneme + "<" + duration + "," + pitch + ">" + consonants + " ";
+        String tone = phoneme + "<" + duration + "," + pitch + ">" + consonants;
         System.out.println(pitchSelector.getSelectedItem().toString() + ": " + tone);
         return (tone);
     }
@@ -207,6 +215,7 @@ public class MakeSongs {
     private static void clearFields() {
         timeField.setText("");
         phoneField.setText("");
+        consField.setText("");
     }
 
     /**
@@ -289,7 +298,7 @@ public class MakeSongs {
         System.exit(0);
     }
 
-    //these 3 methods are all button handlers, the only thing they do is call other methods
+    //these 5 methods are all button handlers, the only thing they do is call other methods
     private static Action onAdd() { //calls addString
         return new Action() {
             @Override
@@ -363,7 +372,6 @@ public class MakeSongs {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                addString();
                 clearFields();
             }
         };
